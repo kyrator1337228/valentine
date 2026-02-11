@@ -1,93 +1,151 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>💌 Валентинка для тебя</title>
-  <meta name="description" content="Открой — тут кое-что важное 💕">
-  <meta property="og:title" content="💌 Валентинка для тебя">
-  <meta property="og:description" content="Открой — тут кое-что важное 💕">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Открой — тут кое-что важное 💕" />
+  <meta property="og:title" content="💌 Валентинка для тебя" />
+  <meta property="og:description" content="Открой — тут кое-что важное 💕" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
+  <!-- Canvas layers -->
   <canvas id="bgCanvas"></canvas>
   <canvas id="petalCanvas"></canvas>
   <div id="cursorTrail"></div>
 
+  <!-- Preloader -->
+  <div class="preload" id="preload">
+    <div class="preload-inner">
+      <div class="preload-heart">💗</div>
+      <div class="preload-text">Загружаю валентинку…</div>
+      <div class="preload-bar"><div class="preload-fill" id="preloadFill"></div></div>
+    </div>
+  </div>
+
+  <!-- Tiny controls -->
+  <div class="top-controls" id="topControls" style="display:none">
+    <button class="chip" id="soundBtn" aria-label="Звук">
+      <span id="soundIcon">🔇</span> <span class="chip-text">звук</span>
+    </button>
+  </div>
+
+  <!-- Envelope screen -->
   <div class="envelope-screen" id="envelopeScreen">
     <div class="envelope-rings" aria-hidden="true">
       <div class="ring r1"></div>
       <div class="ring r2"></div>
       <div class="ring r3"></div>
     </div>
+
     <div class="envelope" id="envelope">
       <div class="envelope-top"></div>
       <div class="envelope-body">
         <div class="envelope-letter">💌</div>
       </div>
+      <div class="envelope-glow" aria-hidden="true"></div>
+
+      <!-- ✅ Wax seal -->
+      <div class="wax-seal" id="waxSeal" aria-label="Печать">
+        <span class="wax-text">Л+У</span>
+      </div>
     </div>
+
     <p class="envelope-hint">Нажми, чтобы открыть</p>
     <div class="envelope-sparkles" id="envelopeSparkles"></div>
+
+    <!-- ✅ Time lock overlay -->
+    <div class="time-lock" id="timeLock" style="display:none">
+      <div class="time-lock-inner">
+        <div class="time-lock-emoji">🔒</div>
+        <div class="time-lock-title">Запечатано до 14 февраля 00:00</div>
+        <div class="time-lock-sub" id="timeLockText"></div>
+      </div>
+    </div>
   </div>
 
+  <!-- Main -->
   <main class="main" id="mainScreen" style="display:none">
     <div class="card-wrapper">
       <div class="card-border-glow"></div>
-      <img class="char char-boy" id="charBoy" src="photos/boy.png" alt="" draggable="false">
-      <img class="char char-girl" id="charGirl" src="photos/girl.png" alt="" draggable="false">
+
+      <img class="char char-boy" id="charBoy" src="photos/boy.png" alt="" draggable="false" />
+      <img class="char char-girl" id="charGirl" src="photos/girl.png" alt="" draggable="false" />
+
       <div class="card" id="card">
         <div class="card-aurora"></div>
         <div class="card-shimmer"></div>
 
+        <!-- Heart SVG -->
         <div class="svg-heart-wrap anim-item" style="--delay:.15s" aria-hidden="true">
           <svg class="svg-heart" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff4da6"/>
-                <stop offset="100%" stop-color="#a855f7"/>
+                <stop offset="0%" stop-color="#ff4da6" />
+                <stop offset="100%" stop-color="#a855f7" />
               </linearGradient>
             </defs>
-            <path class="svg-heart-path" d="M100,170 C60,130 0,100 0,60 A50,50,0,0,1,100,40 A50,50,0,0,1,200,60 C200,100 140,130 100,170Z" fill="none" stroke="url(#hg)" stroke-width="3" stroke-linecap="round"/>
-            <path class="svg-heart-fill" d="M100,170 C60,130 0,100 0,60 A50,50,0,0,1,100,40 A50,50,0,0,1,200,60 C200,100 140,130 100,170Z" fill="url(#hg)" opacity="0"/>
+            <path class="svg-heart-path" d="M100,170 C60,130 0,100 0,60 A50,50,0,0,1,100,40 A50,50,0,0,1,200,60 C200,100 140,130 100,170Z"
+              fill="none" stroke="url(#hg)" stroke-width="3" stroke-linecap="round" />
+            <path class="svg-heart-fill" d="M100,170 C60,130 0,100 0,60 A50,50,0,0,1,100,40 A50,50,0,0,1,200,60 C200,100 140,130 100,170Z"
+              fill="url(#hg)" opacity="0" />
           </svg>
         </div>
 
         <p class="to-line anim-item" style="--delay:.3s">
           <span class="label-muted">Кому:</span>
-          <span class="to-name" id="toText">Ульяшки</span>
+          <span class="to-name" id="toText">Ульяшке</span>
         </p>
 
         <h1 class="title anim-item" style="--delay:.5s" id="titleText">Будешь моей валентинкой? 💕</h1>
 
-        <p class="message anim-item" style="--delay:.7s" id="msgText">Ты самый светлый человек в моей жизни. Каждый день рядом с тобой — подарок.</p>
+        <p class="message anim-item" style="--delay:.7s" id="msgText">
+          Ты самый светлый человек в моей жизни. Каждый день рядом с тобой — подарок.
+        </p>
 
+        <!-- Dialogue -->
         <div class="dialogue anim-item" style="--delay:.1s;display:none" id="dialogue">
           <div class="dialogue-bubble" id="dialogueBubble">
             <p class="dialogue-text" id="dialogueText"></p>
           </div>
         </div>
 
+        <!-- Buttons -->
         <div class="buttons anim-item" style="--delay:.85s" id="buttons">
           <button class="btn btn-yes" id="yesBtn">Да 💖</button>
           <button class="btn btn-no" id="noBtn">Нет</button>
         </div>
 
+        <!-- Result -->
         <div class="result" id="result" style="display:none">
           <div class="result-icon">❤️❤️❤️</div>
           <h2 class="result-title">Ураааа!!!</h2>
           <p class="result-subtitle">Я знал, что ты скажешь «Да»!</p>
+
+          <!-- ✅ Secret counter -->
+          <div class="secret-counter">
+            <span id="secretCounterText">Наши секреты: 0/3</span>
+          </div>
+
           <div class="compliment-carousel" id="complimentCarousel">
             <p class="compliment-text" id="complimentText"></p>
           </div>
-          <img class="char char-together" id="charTogether" src="photos/together.png" alt="" draggable="false">
+
+          <img class="char char-together" id="charTogether" src="photos/together.png" alt="" draggable="false" />
+
           <div class="result-footer">
             <span>Теперь это официально 💕</span>
           </div>
         </div>
 
+        <!-- Countdown -->
         <div class="countdown anim-item" style="--delay:.9s;display:none" id="countdown">
           <span class="countdown-icon">⏳</span>
           <span class="countdown-text" id="countdownText"></span>
@@ -99,6 +157,7 @@
           <span class="heart-icon" id="heartEasterEgg" style="cursor:pointer" title="Нажми 💕">❤️</span>
         </div>
 
+        <!-- Secret -->
         <div class="secret-note" id="secretNote" style="display:none">
           <div class="secret-note-inner">
             <button class="secret-close" id="secretClose">✕</button>
@@ -110,6 +169,10 @@
       </div>
     </div>
   </main>
+
+  <!-- optional audio -->
+  <audio id="audioAmbient" src="audio/ambient.mp3" preload="auto" loop></audio>
+  <audio id="audioPop" src="audio/pop.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
